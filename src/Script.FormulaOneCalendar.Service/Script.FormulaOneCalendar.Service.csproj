@@ -4,4 +4,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="RestEase" Version="1.5.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Script.FormulaOneCalendar.Model\Script.FormulaOneCalendar.Model.csproj" />
+  </ItemGroup>
+
 </Project>
