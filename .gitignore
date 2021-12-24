@@ -552,7 +552,6 @@ obj/
 *.o
 [Dd]ebug*/
 [Rr]elease*/
-*.mode*
 *.app/
 .svn/
 
