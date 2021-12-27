@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.55.0.2500" />
     <PackageReference Include="RestEase" Version="1.5.5" />
   </ItemGroup>
 
