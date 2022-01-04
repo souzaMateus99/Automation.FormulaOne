@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Script.FormulaOneCalendar.Model;
 using Script.FormulaOneCalendar.Service.Clients;
@@ -15,9 +16,11 @@ namespace Script.FormulaOneCalendar.Service
             _ergastClient = ergastClient;
         }
         
-        public async Task<RaceSchedule> GetScheduledRacesAsync(int year)
+        public async Task<IEnumerable<Race>> GetScheduledRacesAsync(int year)
         {
-            return await _ergastClient.GetScheduledRacesAsync(year);
+            var season = await _ergastClient.GetScheduledRacesAsync(year);
+
+            return season.RacesInfo.Races;
         }
     }
 }
