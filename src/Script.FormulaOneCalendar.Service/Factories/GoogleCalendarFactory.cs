@@ -1,3 +1,4 @@
+using System.IO;
 using System.Threading;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
@@ -7,23 +8,24 @@ namespace Script.FormulaOneCalendar.Service.Factories
 {
     public static class GoogleCalendarFactory
     {
-        private static string[] _scopes = { CalendarService.Scope.CalendarReadonly, CalendarService.Scope.CalendarEvents };
-        
-        private const string APPLICATION_NAME = "FormulaOneCalendar";
-        
-        public static CalendarService CreateClientWithSecrets(string clientSecretsPath, string userName = "")
+        private const string APPLICATION_NAME_VALUE = "FormulaOneCalendar";
+
+        private static ServiceAccountCredential GetServiceAccountCredential(string filepath)
         {
-            var credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                GoogleClientSecrets.FromFile(clientSecretsPath).Secrets,
-                _scopes,
-                userName,
-                CancellationToken.None
-            ).GetAwaiter().GetResult();
+            using (var stream = new FileStream(filepath, FileMode.Open, FileAccess.Read))
+            {
+                return ServiceAccountCredential.FromServiceAccountData(stream);
+            }
+        }
+        
+        public static CalendarService CreateWithServiceAccount(string clientSecretsPath)
+        {
+            var credential = GetServiceAccountCredential(clientSecretsPath);
 
             return new CalendarService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = credential,
-                ApplicationName = APPLICATION_NAME
+                ApplicationName = APPLICATION_NAME_VALUE
             });
         }
     }

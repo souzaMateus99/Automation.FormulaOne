@@ -17,12 +17,12 @@ namespace Script.FormulaOneCalendar.Service
             _eventService = calendarService.Events;
         }
 
-        public async Task<Event> CreateFormulaOneEventAsync(string calendarId, RaceSchedule race)
+        public async Task<Event> CreateFormulaOneEventAsync(string calendarId, Race race)
         {
             var googleEventResource = new Event
             {
                 Summary = race.RaceName,
-                Location = race.Circuit.Locality,
+                Location = race.Circuit.Location.Country,
                 Start = new EventDateTime
                 {
                     DateTime = DateTime.Parse("")

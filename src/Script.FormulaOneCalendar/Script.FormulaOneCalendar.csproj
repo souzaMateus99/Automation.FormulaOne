@@ -5,6 +5,10 @@
     <ProjectReference Include="..\Script.FormulaOneCalendar.Service\Script.FormulaOneCalendar.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.55.0.2500" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
