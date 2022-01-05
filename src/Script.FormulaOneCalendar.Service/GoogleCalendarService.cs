@@ -25,11 +25,11 @@ namespace Script.FormulaOneCalendar.Service
                 Location = race.Circuit.Location.Country,
                 Start = new EventDateTime
                 {
-                    DateTime = DateTime.Parse("")
+                    DateTime = new DateTime(race.Date.Year, race.Date.Month, race.Date.Day, race.Time.Hour, race.Time.Minute, race.Time.Second)
                 },
                 End = new EventDateTime
                 {
-                    DateTime = DateTime.Parse("")
+                    DateTime = new DateTime(race.Date.Year, race.Date.Month, race.Date.Day, race.Time.Hour, race.Time.Minute, race.Time.Second).AddHours(2)
                 }
             };
 

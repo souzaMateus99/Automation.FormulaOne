@@ -1,17 +1,20 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
-using RestEase;
+using Microsoft.Extensions.Configuration;
+using Script.FormulaOneCalendar.Model.Settings;
 using Script.FormulaOneCalendar.Service;
 using Script.FormulaOneCalendar.Service.Clients;
-using Script.FormulaOneCalendar.Service.Extensions;
+using Script.FormulaOneCalendar.Service.Factories;
 using Script.FormulaOneCalendar.Service.Interfaces;
 
 namespace Script.FormulaOneCalendar
 {
     class Program
     {
-        private const string ERGAST_FORMULA_ONE_URL = "http://ergast.com/api/f1/";
-        
+        private const string APP_SETTINGS_FILENAME = "appsettings.json";
+        private const string APP_SETTINGS_SECTION = "appsettings";
+
         static void Main(string[] args)
         {
             RunAsync().GetAwaiter().GetResult();
@@ -19,14 +22,20 @@ namespace Script.FormulaOneCalendar
 
         private static async Task RunAsync()
         {
-            IErgastClient ergastClient = new RestClient(ERGAST_FORMULA_ONE_URL)
-            {
-                ResponseDeserializer = new XmlResponseDeserializer()
-            }.For<IErgastClient>();
+            var config = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile(APP_SETTINGS_FILENAME)
+                .Build();
 
-            IRaceService service = new RaceService(ergastClient);
+            var settings = config.GetSection(APP_SETTINGS_SECTION).Get<AppSettings>();
+            
+            IRaceService raceService = new RaceService(RestEaseFactory.CreateClientWithXmlResponse<IErgastClient>(settings.ErgastApi.UrlBase.ToString()));
+            ICalendarService calendarService = new GoogleCalendarService(GoogleCalendarFactory.CreateWithServiceAccount(settings));
 
-            var schedules = await service.GetScheduledRacesAsync(2021);
+            var schedules = await raceService.GetScheduledRacesAsync(2022);
+            var firstRace = schedules.FirstOrDefault();
+
+            var result = await calendarService.CreateFormulaOneEventAsync(settings.Google.Calendar.Id, firstRace);
         }
     }
 }
