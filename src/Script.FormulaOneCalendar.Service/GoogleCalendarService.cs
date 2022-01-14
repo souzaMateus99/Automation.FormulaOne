@@ -37,6 +37,25 @@ namespace Script.FormulaOneCalendar.Service
             return await RequestGoogleAsync(request, CancellationToken.None);
         }
 
+        public async Task UpdateFormulaOneEventAsync(string calendarId, string eventId, Race race)
+        {
+            var googleEventResource = new Event
+            {
+                Start = new EventDateTime
+                {
+                    DateTime = new DateTime(race.Date.Year, race.Date.Month, race.Date.Day, race.Time.Hour, race.Time.Minute, race.Time.Second)
+                },
+                End = new EventDateTime
+                {
+                    DateTime = new DateTime(race.Date.Year, race.Date.Month, race.Date.Day, race.Time.Hour, race.Time.Minute, race.Time.Second).AddHours(2)
+                }
+            };
+            
+            var request = _eventService.Update(null, calendarId, eventId);
+
+            await RequestGoogleAsync(request, CancellationToken.None);
+        }
+
         private async Task<T> RequestGoogleAsync<T>(CalendarBaseServiceRequest<T> eventRequest, CancellationToken cancellationToken)
         {
             return await eventRequest.ExecuteAsync(cancellationToken);
