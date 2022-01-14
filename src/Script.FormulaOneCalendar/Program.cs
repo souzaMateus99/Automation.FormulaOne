@@ -39,16 +39,22 @@ namespace Script.FormulaOneCalendar
             
             IRaceService raceService = new RaceService(RestEaseFactory.CreateClientWithXmlResponse<IErgastClient>(settings.ErgastApi.UrlBase.ToString()));
             ICalendarService calendarService = new GoogleCalendarService(GoogleCalendarFactory.CreateWithServiceAccount(settings));
+            IStorageService storageService = new FileStorageService(currentYear);
+
 
             var schedules = await raceService.GetScheduledRacesAsync(currentYear);
-            var firstRace = schedules.FirstOrDefault();
 
-            var result = await calendarService.CreateFormulaOneEventAsync(settings.Google.Calendar.Id, firstRace);
-
-            if (!string.IsNullOrWhiteSpace(result.Id))
+            foreach (var raceEvent in schedules)
             {
-                IStorageService storageService = new FileStorageService(currentYear);
-                await storageService.SaveRaceAsync(result.Id, firstRace);
+                var result = await calendarService.CreateFormulaOneEventAsync(settings.Google.Calendar.Id, raceEvent);
+                var calendarRace = await storageService.GetRaceAsync(result.Id);
+
+                if (!string.IsNullOrWhiteSpace(calendarRace.Key))
+                {
+                    await calendarService.UpdateFormulaOneEventAsync(settings.Google.Calendar.Id, result.Id, raceEvent);
+                }
+
+                await storageService.SaveRaceAsync(result.Id, raceEvent);
             }
         }
     }
