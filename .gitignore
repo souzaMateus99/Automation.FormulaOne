@@ -792,4 +792,7 @@ Desktop.ini
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
+# Development json
+appsettings.Development.json
+
 # End of https://www.toptal.com/developers/gitignore/api/csharp,aspnetcore,dotnetcore,git,visualstudio,visualstudiocode,openframeworks+visualstudio
