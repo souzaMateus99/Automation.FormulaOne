@@ -17,4 +17,22 @@ This project is an automation that add and update the F1 season in a Google Cale
 > To run this app, you will need to have [.Net Core 3.1](https://dotnet.microsoft.com/en-us/download/dotnet/3.1) installed on your machine
 
 ## How to Use
-To use, you will need to fill the informations in [appsettings file](src/Script.FormulaOneCalendar/appsettings.json)
+To use, you will need to fill the informations in [appsettings file](src/Script.FormulaOneCalendar/appsettings.json) and [run the project](src/Script.FormulaOneCalendar)
+
+```
+"appSettings": {
+    "applicationName": "application name (auto fill)",
+    "ergastApi": {
+        "urlBase": "ergast api url base (auto fill)"
+    },
+    "google": {
+        "calendar": {
+            "id": "google calendar id"
+        },
+        "serviceAccount": {
+            "email": "google service account client_email",
+            "privateKey": "google service account private_key"
+        }
+    }
+}
+```
