@@ -13,8 +13,9 @@ namespace Script.FormulaOneCalendar
 {
     class Program
     {
-        private const string APP_SETTINGS_FILENAME = "appsettings{0}.json";
         private const string APP_SETTINGS_SECTION = "appsettings";
+        private const string JSON_EXTENSION_WITHOUT_DOT = "json";
+        private const string ASPNET_ENV_VARIABLE_NAME = "ASPNETCORE_ENVIRONMENT";
 
         static void Main(string[] args)
         {
@@ -25,9 +26,9 @@ namespace Script.FormulaOneCalendar
         {
             var currentYear = DateTime.Now.Year;
             
-            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            var appsettings = string.Format(APP_SETTINGS_FILENAME, string.Empty);
-            var environmentSettings = string.Format(APP_SETTINGS_FILENAME, $".{env}");
+            var env = Environment.GetEnvironmentVariable(ASPNET_ENV_VARIABLE_NAME);
+            var appsettings = $"{APP_SETTINGS_SECTION}.{JSON_EXTENSION_WITHOUT_DOT}";
+            var environmentSettings = $"{APP_SETTINGS_SECTION}.{env}.{JSON_EXTENSION_WITHOUT_DOT}";
 
             var config = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
