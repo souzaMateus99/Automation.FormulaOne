@@ -7,6 +7,7 @@ namespace Script.FormulaOneCalendar.Service.Interfaces
     public interface ICalendarService
     {
         Task<Event> CreateFormulaOneEventAsync(string calendarId, Race race);
+        Task<Event> GetFormulaOneEventAsync(string calendarId, Race race);
         Task UpdateFormulaOneEventAsync(string calendarId, string eventId, Race race);
     }
 }
