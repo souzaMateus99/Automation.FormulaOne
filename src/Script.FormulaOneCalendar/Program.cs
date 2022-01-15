@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Script.FormulaOneCalendar.Model;
 using Script.FormulaOneCalendar.Model.Settings;
 using Script.FormulaOneCalendar.Service;
 using Script.FormulaOneCalendar.Service.Clients;
@@ -42,20 +40,29 @@ namespace Script.FormulaOneCalendar
             ICalendarService calendarService = new GoogleCalendarService(GoogleCalendarFactory.CreateWithServiceAccount(settings));
             IStorageService storageService = new FileStorageService(currentYear);
 
-
             var schedules = await raceService.GetScheduledRacesAsync(currentYear);
 
             foreach (var raceEvent in schedules)
             {
-                var result = await calendarService.CreateFormulaOneEventAsync(settings.Google.Calendar.Id, raceEvent);
-                var calendarRace = await storageService.GetRaceAsync(result.Id);
+                var calendarEvent = await calendarService.GetFormulaOneEventAsync(settings.Google.Calendar.Id, raceEvent);
 
-                if (!string.IsNullOrWhiteSpace(calendarRace.Key))
+                if (calendarEvent is null)
                 {
-                    await calendarService.UpdateFormulaOneEventAsync(settings.Google.Calendar.Id, result.Id, raceEvent);
+                    var result = await calendarService.CreateFormulaOneEventAsync(settings.Google.Calendar.Id, raceEvent);
+
+                    calendarEvent = result;
+                }
+                else
+                {
+                    var calendarRace = await storageService.GetRaceAsync(calendarEvent.Id);
+
+                    if (!string.IsNullOrWhiteSpace(calendarRace.Key))
+                    {
+                        await calendarService.UpdateFormulaOneEventAsync(settings.Google.Calendar.Id, calendarEvent.Id, raceEvent);
+                    }
                 }
 
-                await storageService.SaveRaceAsync(result.Id, raceEvent);
+                await storageService.SaveRaceAsync(calendarEvent.Id, raceEvent);
             }
         }
     }
