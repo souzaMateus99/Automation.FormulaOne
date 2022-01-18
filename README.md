@@ -79,7 +79,6 @@ The project uses the [Ergast Api](http://ergast.com/mrd/) ([Postman documentatio
 
 #### .Net Core 3.1 (Debug/Release)
 1. To use with .net core, you will need to **fill the properties** in [appsettings file](src/Script.FormulaOneCalendar/appsettings.json)
-    
     ```json
     "appSettings": {
         "applicationName": "application name (auto fill)",
