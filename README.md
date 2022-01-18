@@ -3,10 +3,11 @@
 > ℹ️ Caso queira ler o README em português brasileiro, [clique aqui](docs/README.pt.md)<p>
 > (If you want to read README in brazilian portuguese, [click here](docs/README.pt.md))
 
-This project is an automation that add and update the F1 season in a Google Calendar.
-
 > ⚠️ [Click here](https://calendar.google.com/calendar/u/0?cid=ZjdycmM5b2V1bmVhbWhpN2dnMzlic29kczBAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ) if you want the F1 season without run this app. 
 > <p>The link will add you in a public calendar with the F1 races</p>
+
+This project is an automation that add, update and remove the F1 races to a Google Calendar.<p>
+The project uses the [Ergast Api](http://ergast.com/mrd/) ([Postman documentation](https://documenter.getpostman.com/view/11586746/SztEa7bL)) to get the F1 season races (dates and times of all event: Pratice, Qualifying, Race) and uses the [Google Calendar Api](https://developers.google.com/calendar/api) to add events in Google Calendar
 
 - [Formula One Calendar](#formula-one-calendar)
   - [**Pre requirements**](#pre-requirements)
@@ -55,7 +56,7 @@ This project is an automation that add and update the F1 season in a Google Cale
 > ℹ️ Change above **imageName** to a name that you want
 
 #### .Net Core 3.1 (Debug/Release)
-1. To use, you will need to fill the informations in [appsettings file](src/Script.FormulaOneCalendar/appsettings.json)
+1. To use with .net core, you will need to fill the informations in [appsettings file](src/Script.FormulaOneCalendar/appsettings.json)
     
     ```json
     "appSettings": {
