@@ -19,16 +19,16 @@ O projeto usa a [Ergast Api](http://ergast.com/mrd/) ([Postman documentation](ht
 
 ## **Pré-requisitos**
 #### Coloque seu calendário como público e obtenha o Id do seu calendário
-> [Click here](https://yabdab.zendesk.com/hc/en-us/articles/205945926-Find-Google-Calendar-ID) to learn how to let your calendar public and how to get calendar id
+> [Clique aqui](https://yabdab.zendesk.com/hc/en-us/articles/205945926-Find-Google-Calendar-ID) para aprender como deixar seu calendário público e como obter seu Id do calendário
 
 #### Conta de serviço do Google (Google Service Account)
-> [Click here](https://support.google.com/a/answer/7378726?hl=en) to get learn how to create Google Service Account to fill some properties in [appsettings](src/Script.FormulaOneCalendar/appsettings.json)
+> [Clique aqui](https://support.google.com/a/answer/7378726?hl=en) para aprender como criar sua conta de serviço do Google para preencher algumas propriedades no [appsettings](src/Script.FormulaOneCalendar/appsettings.json)
 
 #### Compartilhe seu calendário com seu e-mail da conta de serviço do Google
-> [Click here](https://support.google.com/a/users/answer/37082?hl=en) to read how share your Google Calendar and get the ***client_email*** from your service account json
+> [Clique aqui](https://support.google.com/a/users/answer/37082?hl=en) para ler como compartilhar seu calendário do Google com seu e-mail da conta de serviço (client_email)
 
 #### .Net Core 3.1 ou Docker (Não é necessário para Github Release)
-> To run this app, you will need to have [.Net Core 3.1](https://dotnet.microsoft.com/en-us/download/dotnet/3.1) or [Docker](https://www.docker.com/get-started) installed and configured on your machine
+> Para rodar esse app, você precisará ter [.Net Core 3.1](https://dotnet.microsoft.com/en-us/download/dotnet/3.1) ou [Docker](https://www.docker.com/get-started) instalado e configurado na sua máquina
 
 ## **Como usar**
 #### Github Release
