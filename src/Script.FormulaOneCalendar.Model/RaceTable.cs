@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace Script.FormulaOneCalendar.Model
@@ -6,7 +5,6 @@ namespace Script.FormulaOneCalendar.Model
     [XmlRoot(ElementName="RaceTable")]
     public class RaceTable
     {
-
         [XmlElement(ElementName="Race")]
         public Race[] Races { get; set; }
 

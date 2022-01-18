@@ -14,7 +14,7 @@ namespace Script.FormulaOneCalendar.Service
 {
     public class GoogleCalendarService : ICalendarService
     {
-        private const int TOTAL_RETRY_ATTEMPTS_VALUE = 5;
+        private const string EVENT_DESCRIPTION_TEXT = "Event created by \"F1 - calendar\" automation";
         
         private readonly EventsResource _eventService;
         
@@ -31,23 +31,51 @@ namespace Script.FormulaOneCalendar.Service
             return await RequestGoogleAsync(request);
         }
 
-        public async Task<Event> GetFormulaOneEventAsync(string calendarId, Race race)
+        public async Task<IEnumerable<Event>> GetAllFormulaOneEventsAsync(string calendarId)
         {
             var request = _eventService.List(calendarId);
-            
-            var raceFiltered = await Policy
-                .HandleResult<Event>(e => e is null)
-                .RetryAsync(TOTAL_RETRY_ATTEMPTS_VALUE)
+            var totalRetryAttempt = 1;
+            var items = new List<Event>();
+
+            await Policy
+                .HandleResult<Events>(e => e is null || !string.IsNullOrWhiteSpace(e.NextPageToken))
+                .RetryAsync(totalRetryAttempt, onRetry: (eventResult, retry) =>
+                {
+                    if (!string.IsNullOrWhiteSpace(eventResult.Result.NextPageToken))
+                    {
+                        totalRetryAttempt++;
+                    }
+                })
                 .ExecuteAsync(async () => 
                 {
                     var events = await RequestGoogleAsync(request);
                     request.PageToken = events.NextPageToken;
 
-                    return events.Items
-                        .FirstOrDefault(i => i.Summary.Equals(race.RaceName) && i.Start.DateTime.Value.Date.Equals(race.Date.Date));
+                    var raceEvents = events.Items
+                                        .Where(e => e.Start.DateTime.Value.Date >= DateTime.Now.Date && e.Description.Equals(EVENT_DESCRIPTION_TEXT));
+
+                    items.AddRange(raceEvents);
+
+                    return events;
                 });
 
-            return raceFiltered;
+            return items;
+        }
+
+        public async Task<Event> GetFormulaOneEventAsync(string calendarId, Race race)
+        {
+            var races = await GetAllFormulaOneEventsAsync(calendarId);
+
+            return races.FirstOrDefault(r => r.Summary.Equals(race.RaceName)
+                                        && r.Location.Equals(race.Circuit.Location.Country)
+                                        && r.Start.DateTime.Value.Date.Equals(race.Date.Date));
+        }
+
+        public async Task RemoveFormulaOneEventAsync(string calendarId, string eventId)
+        {
+            var request = _eventService.Delete(calendarId, eventId);
+
+            var text = await RequestGoogleAsync(request);
         }
 
         public async Task UpdateFormulaOneEventAsync(string calendarId, string eventId, Race race)
@@ -64,6 +92,7 @@ namespace Script.FormulaOneCalendar.Service
             return new Event
             {
                 Summary = race.RaceName,
+                Description = EVENT_DESCRIPTION_TEXT,
                 Location = race.Circuit.Location.Country,
                 Start = new EventDateTime
                 {

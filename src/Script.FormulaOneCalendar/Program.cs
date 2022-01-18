@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Script.FormulaOneCalendar.Model;
 using Script.FormulaOneCalendar.Model.Settings;
 using Script.FormulaOneCalendar.Service;
 using Script.FormulaOneCalendar.Service.Clients;
@@ -40,8 +42,14 @@ namespace Script.FormulaOneCalendar
             ICalendarService calendarService = new GoogleCalendarService(GoogleCalendarFactory.CreateWithServiceAccount(settings));
             IStorageService storageService = new FileStorageService(currentYear);
 
-            var schedules = await raceService.GetScheduledRacesAsync(currentYear);
+            await AddAndUpdateF1SeasonAsync(settings, currentYear, raceService, calendarService, storageService);
+            await RemoveF1SeasonAsync(settings, calendarService, storageService);
+        }
 
+        private static async Task AddAndUpdateF1SeasonAsync(AppSettings settings, int year, IRaceService raceService, ICalendarService calendarService, IStorageService storageService)
+        {
+            var schedules = await raceService.GetScheduledRacesAsync(year);
+            
             foreach (var raceEvent in schedules)
             {
                 var calendarEvent = await calendarService.GetFormulaOneEventAsync(settings.Google.Calendar.Id, raceEvent);
@@ -63,6 +71,21 @@ namespace Script.FormulaOneCalendar
                 }
 
                 await storageService.SaveRaceAsync(calendarEvent.Id, raceEvent);
+            }
+        }
+
+        private static async Task RemoveF1SeasonAsync(AppSettings settings, ICalendarService calendarService, IStorageService storageService)
+        {
+            var calendarRaces = await calendarService.GetAllFormulaOneEventsAsync(settings.Google.Calendar.Id);
+            
+            foreach (var calendarRace in calendarRaces)
+            {
+                var storageRace = await storageService.GetRaceAsync(calendarRace.Id);
+
+                if (string.IsNullOrWhiteSpace(storageRace.Key))
+                {
+                    await calendarService.RemoveFormulaOneEventAsync(settings.Google.Calendar.Id, calendarRace.Id);
+                }
             }
         }
     }
