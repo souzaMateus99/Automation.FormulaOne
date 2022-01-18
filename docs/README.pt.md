@@ -3,7 +3,7 @@
 > ⚠️ [Clique aqui](https://calendar.google.com/calendar/u/0?cid=ZjdycmM5b2V1bmVhbWhpN2dnMzlic29kczBAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ) se você quer obter o calendário da F1 sem precisar rodar o app.
 > <p>O link irá adicionar você em um calendário público com as corridas da F1</p>
 
-Esse projet é uma automação que adiciona, atualiza e remove as corridas da F1 em um calendário do Google.<p>
+Esse projeto é uma automação que adiciona, atualiza e remove as corridas da F1 em um calendário do Google.<p>
 O projeto usa a [Ergast Api](http://ergast.com/mrd/) ([Postman documentation](https://documenter.getpostman.com/view/11586746/SztEa7bL)) para obter as corridas da temporada da F1 (datas e horários de todos os eventos: Treino, Qualificação, Corrida) e usa a [Google Calendar Api](https://developers.google.com/calendar/api) para adicionar eventos no calendário do Google.
 
 - [Calendário da Formula 1](#calendário-da-formula-1)
