@@ -17,4 +17,4 @@ ENV GoogleCalendarId ""
 ENV ServiceAccountEmail ""
 ENV ServiceAccountPrivateKey ""
 
-ENTRYPOINT ["dotnet", "Script.FormulaOneCalendar.dll"]
+ENTRYPOINT ["dotnet", "Script.FormulaOneCalendar.dll", "99"]

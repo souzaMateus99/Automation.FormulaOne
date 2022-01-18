@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Script.FormulaOneCalendar.Model;
@@ -17,34 +18,66 @@ namespace Script.FormulaOneCalendar
         private const string APP_SETTINGS_SECTION = "appsettings";
         private const string JSON_EXTENSION_WITHOUT_DOT = "json";
         private const string NEW_LINE_ESCAPE_RAW = "\\n";
+        private const int ADD_UPDATE_CALENDAR_FLOW_OPTION = 1;
+        private const int REMOVE_EVENT_CALENDAR_FLOW_OPTION = 2;
+        private const int BOTH_FLOW_OPTION = 99;
 
         static void Main(string[] args)
         {
-            RunAsync().GetAwaiter().GetResult();
+            RunAsync(args).GetAwaiter().GetResult();
         }
 
-        private static async Task RunAsync()
+        private static async Task RunAsync(string[] args)
         {
-            var currentYear = DateTime.Now.Year;
+            var flow = args.FirstOrDefault() is null ? SetFlow() : int.Parse(args.FirstOrDefault());
+
+            if (flow != default)
+            {
+                var currentYear = DateTime.Now.Year;
             
-            var env = Environment.GetEnvironmentVariable(EnvironmentVariablesConst.ASPNET_ENV_VARIABLE_NAME);
-            var appsettings = $"{APP_SETTINGS_SECTION}.{JSON_EXTENSION_WITHOUT_DOT}";
-            var environmentSettings = $"{APP_SETTINGS_SECTION}.{env}.{JSON_EXTENSION_WITHOUT_DOT}";
+                var env = Environment.GetEnvironmentVariable(EnvironmentVariablesConst.ASPNET_ENV_VARIABLE_NAME);
+                var appsettings = $"{APP_SETTINGS_SECTION}.{JSON_EXTENSION_WITHOUT_DOT}";
+                var environmentSettings = $"{APP_SETTINGS_SECTION}.{env}.{JSON_EXTENSION_WITHOUT_DOT}";
 
-            var config = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile(appsettings, optional: false,  reloadOnChange: true)
-                .AddJsonFile(environmentSettings, optional: true)
-                .Build();
+                var config = new ConfigurationBuilder()
+                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                    .AddJsonFile(appsettings, optional: false,  reloadOnChange: true)
+                    .AddJsonFile(environmentSettings, optional: true)
+                    .Build();
 
-            var settings = GetAppSettings(config);
-            
-            IRaceService raceService = new RaceService(RestEaseFactory.CreateClientWithXmlResponse<IErgastClient>(settings.ErgastApi.UrlBase.ToString()));
-            ICalendarService calendarService = new GoogleCalendarService(GoogleCalendarFactory.CreateWithServiceAccount(settings));
-            IStorageService storageService = new FileStorageService(currentYear);
+                var settings = GetAppSettings(config);
+                
+                IRaceService raceService = new RaceService(RestEaseFactory.CreateClientWithXmlResponse<IErgastClient>(settings.ErgastApi.UrlBase.ToString()));
+                ICalendarService calendarService = new GoogleCalendarService(GoogleCalendarFactory.CreateWithServiceAccount(settings));
+                IStorageService storageService = new FileStorageService(currentYear);
 
-            // await AddAndUpdateF1SeasonAsync(settings, currentYear, raceService, calendarService, storageService);
-            await RemoveF1SeasonAsync(settings, calendarService, storageService);
+                if (flow.Equals(ADD_UPDATE_CALENDAR_FLOW_OPTION) || flow.Equals(BOTH_FLOW_OPTION))
+                {
+                    await AddAndUpdateF1SeasonAsync(settings, currentYear, raceService, calendarService, storageService);
+                }
+
+                if (flow.Equals(REMOVE_EVENT_CALENDAR_FLOW_OPTION) || flow.Equals(BOTH_FLOW_OPTION))
+                {
+                    await RemoveF1SeasonAsync(settings, calendarService, storageService);
+                }
+            }
+        }
+
+        private static int SetFlow()
+        {
+            Console.WriteLine("Select an option");
+            Console.WriteLine("1- Add/Update F1 event to calendar");
+            Console.WriteLine("2- Remove F1 event to calendar");
+            Console.WriteLine("99- Both above options");
+
+            var userInput = Console.ReadLine();
+
+            if (int.TryParse(userInput, out var value))
+            {
+                return value;
+            }
+
+            return default;
         }
 
         private static AppSettings GetAppSettings(IConfiguration configuration)

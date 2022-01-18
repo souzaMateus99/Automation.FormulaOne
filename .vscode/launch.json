@@ -10,7 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/Script.FormulaOneCalendar/bin/Debug/netcoreapp3.1/Script.FormulaOneCalendar.dll",
-            "args": [],
+            "args": [
+                "99"
+            ],
             "cwd": "${workspaceFolder}/src/Script.FormulaOneCalendar",
             "console": "internalConsole",
             "stopAtEntry": false,
