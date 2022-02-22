@@ -67,8 +67,8 @@ namespace Script.FormulaOneCalendar.Service
             var races = await GetAllFormulaOneEventsAsync(calendarId);
 
             return races.FirstOrDefault(r => r.Summary.Equals(race.RaceName)
-                                        && r.Location.Equals(race.Circuit.Location.Country)
-                                        && r.Start.DateTime.Value.Date.Equals(race.Date.Date));
+                                        /*&& r.Location.Equals(race.Circuit.Location.Country)
+                                        && r.Start.DateTime.Value.Date.Equals(race.Date.Date)*/);
         }
 
         public async Task RemoveFormulaOneEventAsync(string calendarId, string eventId)
@@ -91,17 +91,17 @@ namespace Script.FormulaOneCalendar.Service
         {
             return new Event
             {
-                Summary = race.RaceName,
-                Description = EVENT_DESCRIPTION_TEXT,
-                Location = race.Circuit.Location.Country,
-                Start = new EventDateTime
-                {
-                    DateTime = new DateTime(race.Date.Year, race.Date.Month, race.Date.Day, race.Time.Hour, race.Time.Minute, race.Time.Second)
-                },
-                End = new EventDateTime
-                {
-                    DateTime = new DateTime(race.Date.Year, race.Date.Month, race.Date.Day, race.Time.Hour, race.Time.Minute, race.Time.Second).AddHours(2)
-                }
+                // Summary = race.RaceName,
+                // Description = EVENT_DESCRIPTION_TEXT,
+                // Location = race.Circuit.Location.Country,
+                // Start = new EventDateTime
+                // {
+                //     DateTime = new DateTime(race.Date.Year, race.Date.Month, race.Date.Day, race.Time.Hour, race.Time.Minute, race.Time.Second)
+                // },
+                // End = new EventDateTime
+                // {
+                //     DateTime = new DateTime(race.Date.Year, race.Date.Month, race.Date.Day, race.Time.Hour, race.Time.Minute, race.Time.Second).AddHours(2)
+                // }
             };
         }
 
