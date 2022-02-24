@@ -7,7 +7,6 @@ namespace Script.FormulaOneCalendar.Service.Interfaces
     public interface IRaceService
     {
         Task<IEnumerable<Race>> GetScheduledRacesAsync(int year);
-
-        Task<bool> GetRacesDetailAsync(IEnumerable<Race> races);
+        Task<bool> GetRaceDetailsAsync(Race race);
     }
 }

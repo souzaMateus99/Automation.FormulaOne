@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Script.FormulaOneCalendar.Model.Constants;
 using Script.FormulaOneCalendar.Model.Settings;
 using Script.FormulaOneCalendar.Service;
@@ -32,21 +33,24 @@ namespace Script.FormulaOneCalendar
             if (flow != default)
             {
                 var currentYear = DateTime.Now.Year;
-            
+
                 var env = Environment.GetEnvironmentVariable(EnvironmentVariablesConst.ASPNET_ENV_VARIABLE_NAME);
                 var appsettings = $"{APP_SETTINGS_SECTION}.{JSON_EXTENSION_WITHOUT_DOT}";
                 var environmentSettings = $"{APP_SETTINGS_SECTION}.{env}.{JSON_EXTENSION_WITHOUT_DOT}";
 
                 var config = new ConfigurationBuilder()
                     .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                    .AddJsonFile(appsettings, optional: false,  reloadOnChange: true)
-                    .AddJsonFile(environmentSettings, optional: true,  reloadOnChange: true)
+                    .AddJsonFile(appsettings, optional: false, reloadOnChange: true)
+                    .AddJsonFile(environmentSettings, optional: true, reloadOnChange: true)
                     .Build();
 
                 var settings = GetAppSettings(config);
-                
+
                 IRaceService raceService = new RaceService(
-                    RestEaseFactory.CreateClient<IFormulaOneClient>(settings.FormulaOne.UrlBase),
+                    RestEaseFactory.CreateClient<IFormulaOneClient>(settings.FormulaOne.UrlBase, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    }),
                     settings
                 );
                 ICalendarService calendarService = new GoogleCalendarService(GoogleCalendarFactory.CreateWithServiceAccount(settings));
@@ -87,7 +91,7 @@ namespace Script.FormulaOneCalendar
             {
                 return configuration.GetSection(APP_SETTINGS_SECTION).Get<AppSettings>();
             }
-            
+
             return new AppSettings
             {
                 ApplicationName = Environment.GetEnvironmentVariable(EnvironmentVariablesConst.APPLICATION_NAME_ENV),
@@ -114,36 +118,41 @@ namespace Script.FormulaOneCalendar
 
         private static async Task AddAndUpdateF1SeasonAsync(AppSettings settings, int year, IRaceService raceService, ICalendarService calendarService, IStorageService storageService)
         {
-            var schedules = await raceService.GetScheduledRacesAsync(year);
-            
-            foreach (var raceEvent in schedules)
+            var seasonRaces = await raceService.GetScheduledRacesAsync(year);
+
+            foreach (var race in seasonRaces)
             {
-                var calendarEvent = await calendarService.GetFormulaOneEventAsync(settings.Google.Calendar.Id, raceEvent);
+                var isGetDetail = await raceService.GetRaceDetailsAsync(race);
 
-                if (calendarEvent is null)
+                if (isGetDetail)
                 {
-                    var result = await calendarService.CreateFormulaOneEventAsync(settings.Google.Calendar.Id, raceEvent);
+                    var calendarEvent = await calendarService.GetFormulaOneEventAsync(settings.Google.Calendar.Id, race);
 
-                    calendarEvent = result;
-                }
-                else
-                {
-                    var calendarRace = await storageService.GetRaceAsync(calendarEvent.Id);
-
-                    if (!string.IsNullOrWhiteSpace(calendarRace.Key))
+                    if (calendarEvent is null)
                     {
-                        await calendarService.UpdateFormulaOneEventAsync(settings.Google.Calendar.Id, calendarEvent.Id, raceEvent);
-                    }
-                }
+                        var result = await calendarService.CreateFormulaOneEventAsync(settings.Google.Calendar.Id, race);
 
-                await storageService.SaveRaceAsync(calendarEvent.Id, raceEvent);
+                        calendarEvent = result;
+                    }
+                    else
+                    {
+                        var calendarRace = await storageService.GetRaceAsync(calendarEvent.Id);
+
+                        if (!string.IsNullOrWhiteSpace(calendarRace.Key))
+                        {
+                            await calendarService.UpdateFormulaOneEventAsync(settings.Google.Calendar.Id, calendarEvent.Id, race);
+                        }
+                    }
+
+                    await storageService.SaveRaceAsync(calendarEvent.Id, race);
+                }
             }
         }
 
         private static async Task RemoveF1SeasonAsync(AppSettings settings, ICalendarService calendarService, IStorageService storageService)
         {
             var calendarRaces = await calendarService.GetAllFormulaOneEventsAsync(settings.Google.Calendar.Id);
-            
+
             foreach (var calendarRace in calendarRaces)
             {
                 var storageRace = await storageService.GetRaceAsync(calendarRace.Id);
