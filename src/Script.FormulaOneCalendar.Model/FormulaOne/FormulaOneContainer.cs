@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace Script.FormulaOneCalendar.Model.FormulaOne
 {
     public class FormulaOneContainer
-    {
+    {        
         [JsonProperty("layout")]
         public string Layout { get; set; }
 
@@ -19,8 +19,11 @@ namespace Script.FormulaOneCalendar.Model.FormulaOne
 
         [JsonProperty("actions")]
         public IEnumerable<FormulaOneAction> Actions { get; set; }
+        
+        [JsonProperty("eventName")]
+        public string EventName { get; set; }
 
-        // [JsonProperty("translations")]
-        // public FormulaOneTranslations Translations { get; set; }
+        [JsonProperty("events")]
+        public IEnumerable<FormulaOneContainer> Events { get; set; }
     }
 }

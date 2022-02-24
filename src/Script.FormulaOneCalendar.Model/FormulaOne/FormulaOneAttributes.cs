@@ -41,7 +41,16 @@ namespace Script.FormulaOneCalendar.Model.FormulaOne
         [JsonProperty("Meeting_Display_Date")]
         public string MeetingDisplayDate { get; set; }
 
+        [JsonProperty("Global_Title")]
+        public string GlobalTitle { get; set; }
+
         [JsonProperty("PageID")]
         public string PageId { get; set; }
+
+        [JsonProperty("sessionStartDate")]
+        public long SessionStartDate { get; set; }
+
+        [JsonProperty("sessionEndDate")]
+        public long SessionEndDate { get; set; }
     }
 }
