@@ -7,8 +7,8 @@ namespace Script.FormulaOneCalendar.Model.Settings
         [JsonProperty("applicationName")]
         public string ApplicationName { get; set; }
 
-        [JsonProperty("ergastApi")]
-        public ErgastApiSettings ErgastApi { get; set; }
+        [JsonProperty("formulaOne")]
+        public FormulaOneSettings FormulaOne { get; set; }
 
         [JsonProperty("google")]
         public GoogleSettings Google { get; set; }

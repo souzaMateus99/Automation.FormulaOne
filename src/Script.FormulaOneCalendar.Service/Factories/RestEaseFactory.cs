@@ -1,3 +1,5 @@
+using System;
+using Newtonsoft.Json;
 using RestEase;
 using Script.FormulaOneCalendar.Service.Extensions;
 
@@ -5,12 +7,12 @@ namespace Script.FormulaOneCalendar.Service.Factories
 {
     public static class RestEaseFactory
     {
-        public static T CreateClientWithXmlResponse<T>(string url)
+        public static T CreateClient<T>(Uri url, JsonSerializerSettings jsonSerializerSettings)
         {
             return new RestClient(url)
             {
-                ResponseDeserializer = new XmlResponseDeserializer()
-            }.For<T>();   
+                JsonSerializerSettings = jsonSerializerSettings
+            }.For<T>();
         }
     }
 }
