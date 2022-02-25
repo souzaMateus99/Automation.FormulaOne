@@ -97,7 +97,17 @@ namespace Script.FormulaOneCalendar
                 ApplicationName = Environment.GetEnvironmentVariable(EnvironmentVariablesConst.APPLICATION_NAME_ENV),
                 FormulaOne = new FormulaOneSettings
                 {
-                    UrlBase = new Uri(Environment.GetEnvironmentVariable(EnvironmentVariablesConst.ERGAST_API_URL_ENV))
+                    UrlBase = new Uri(Environment.GetEnvironmentVariable(EnvironmentVariablesConst.FORMULA_ONE_API_URL_ENV)),
+                    ApiVersion = Environment.GetEnvironmentVariable(EnvironmentVariablesConst.FORMULA_ONE_API_VERSION_ENV),
+                    Language = Environment.GetEnvironmentVariable(EnvironmentVariablesConst.FORMULA_ONE_API_LANGUAGE_ENV),
+                    YearsPageId = new FormulaOneYearsPage[]
+                    {
+                        new FormulaOneYearsPage
+                        {
+                            Year = long.Parse(Environment.GetEnvironmentVariable(EnvironmentVariablesConst.FORMULA_ONE_YEAR_ENV)),
+                            PageId = Environment.GetEnvironmentVariable(EnvironmentVariablesConst.FORMULA_ONE_PAGE_ID_ENV)
+                        }
+                    }
                 },
                 Google = new GoogleSettings
                 {

@@ -12,7 +12,11 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 ENV ApplicationName "FormulaOneCalendar"
-ENV ErgastApiUrl "http://ergast.com/api/f1/"
+ENV FormulaOneApiUrl "http://ergast.com/api/f1/"
+ENV FormulaOneApiVersion "2.0"
+ENV FormulaOneApiLanguage "POR"
+ENV FormulaOneApiYear "2022"
+ENV FormulaOneApiPageId "4319"
 ENV GoogleCalendarId ""
 ENV ServiceAccountEmail ""
 ENV ServiceAccountPrivateKey ""
