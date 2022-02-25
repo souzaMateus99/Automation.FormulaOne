@@ -7,10 +7,10 @@ namespace Script.FormulaOneCalendar.Service.Interfaces
 {
     public interface ICalendarService
     {
-        Task<Event> CreateFormulaOneEventAsync(string calendarId, Race race);
+        Task<Event> CreateFormulaOneEventAsync(string calendarId, RaceDetail raceEvent);
         Task<IEnumerable<Event>> GetAllFormulaOneEventsAsync(string calendarId);
-        Task<Event> GetFormulaOneEventAsync(string calendarId, Race race);
+        Task<Event> GetFormulaOneEventAsync(string calendarId, RaceDetail raceEvent);
         Task RemoveFormulaOneEventAsync(string calendarId, string eventId);
-        Task UpdateFormulaOneEventAsync(string calendarId, string eventId, Race race);
+        Task UpdateFormulaOneEventAsync(string calendarId, string eventId, RaceDetail raceEvent);
     }
 }

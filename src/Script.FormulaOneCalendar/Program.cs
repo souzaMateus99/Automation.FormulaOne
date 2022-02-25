@@ -126,25 +126,28 @@ namespace Script.FormulaOneCalendar
 
                 if (isGetDetail)
                 {
-                    var calendarEvent = await calendarService.GetFormulaOneEventAsync(settings.Google.Calendar.Id, race);
-
-                    if (calendarEvent is null)
+                    foreach (var raceDetail in race.RaceDetails)
                     {
-                        var result = await calendarService.CreateFormulaOneEventAsync(settings.Google.Calendar.Id, race);
+                        var calendarEvent = await calendarService.GetFormulaOneEventAsync(settings.Google.Calendar.Id, raceDetail);
 
-                        calendarEvent = result;
-                    }
-                    else
-                    {
-                        var calendarRace = await storageService.GetRaceAsync(calendarEvent.Id);
-
-                        if (!string.IsNullOrWhiteSpace(calendarRace.Key))
+                        if (calendarEvent is null)
                         {
-                            await calendarService.UpdateFormulaOneEventAsync(settings.Google.Calendar.Id, calendarEvent.Id, race);
-                        }
-                    }
+                            var result = await calendarService.CreateFormulaOneEventAsync(settings.Google.Calendar.Id, raceDetail);
 
-                    await storageService.SaveRaceAsync(calendarEvent.Id, race);
+                            calendarEvent = result;
+                        }
+                        else
+                        {
+                            var calendarRace = await storageService.GetRaceAsync(calendarEvent.Id);
+
+                            if (!string.IsNullOrWhiteSpace(calendarRace.Key))
+                            {
+                                await calendarService.UpdateFormulaOneEventAsync(settings.Google.Calendar.Id, calendarEvent.Id, raceDetail);
+                            }
+                        }
+
+                        await storageService.SaveRaceAsync(calendarEvent.Id, race);
+                    }
                 }
             }
         }
@@ -157,7 +160,7 @@ namespace Script.FormulaOneCalendar
             {
                 var storageRace = await storageService.GetRaceAsync(calendarRace.Id);
 
-                if (string.IsNullOrWhiteSpace(storageRace.Key))
+                if (!string.IsNullOrWhiteSpace(storageRace.Key))
                 {
                     await calendarService.RemoveFormulaOneEventAsync(settings.Google.Calendar.Id, calendarRace.Id);
                 }

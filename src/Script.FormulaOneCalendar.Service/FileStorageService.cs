@@ -52,7 +52,7 @@ namespace Script.FormulaOneCalendar.Service
         {
             var races = await GetRacesFromFileAsync();
 
-            if (races.TryGetValue(eventId, out var _))
+            if (races.TryGetValue(eventId, out _))
             {
                 races.Remove(eventId);
             }

@@ -55,6 +55,8 @@ namespace Script.FormulaOneCalendar.Service
                         EndDate = race.Metadata.Attributes.MeetingEndDate.HasValue ? race.Metadata.Attributes.MeetingEndDate.Value.ToUniversalTime() : new DateTime(),
                         Season = race.Metadata.Season,
                         Round = int.TryParse(race.Metadata.Attributes.MeetingNumber, out var round) ? round : 0,
+                        Country = race.Metadata.Attributes.Country,
+                        Location = race.Metadata.Attributes.MeetingLocation,
                         PageId = race.Metadata.Attributes.PageId
                     });
 
@@ -90,7 +92,10 @@ namespace Script.FormulaOneCalendar.Service
                         EndDate = _initialUnixDate.AddMilliseconds(d.Metadata.Attributes.SessionEndDate).ToLocalTime()
                     });
 
-                    race.AddRaceDetails(details);
+                    foreach (var detail in details)
+                    {
+                        race.RaceDetails.Add(detail);
+                    }
 
                     return true;
                 }
