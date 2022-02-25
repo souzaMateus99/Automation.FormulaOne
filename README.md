@@ -7,7 +7,6 @@
 > <p>The link will add you in a public calendar with the F1 races</p>
 
 This project is an automation that add, update and remove the F1 races to a Google Calendar.<p>
-The project uses the [Ergast Api](http://ergast.com/mrd/) ([Postman documentation](https://documenter.getpostman.com/view/11586746/SztEa7bL)) to get the F1 season races (dates and times of all event: Practice, Qualifying, Race) and uses the [Google Calendar Api](https://developers.google.com/calendar/api) to add events in Google Calendar
 
 - [Formula One Calendar](#formula-one-calendar)
   - [**Pre requirements**](#pre-requirements)
