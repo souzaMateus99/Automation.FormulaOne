@@ -11,10 +11,9 @@ O projeto usa a [Ergast Api](http://ergast.com/mrd/) ([Postman documentation](ht
       - [Coloque seu calendário como público e obtenha o Id do seu calendário](#coloque-seu-calendário-como-público-e-obtenha-o-id-do-seu-calendário)
       - [Conta de serviço do Google (Google Service Account)](#conta-de-serviço-do-google-google-service-account)
       - [Compartilhe seu calendário com seu e-mail da conta de serviço do Google](#compartilhe-seu-calendário-com-seu-e-mail-da-conta-de-serviço-do-google)
-      - [.Net Core 3.1 ou Docker (Não é necessário para Github Release)](#net-core-31-ou-docker-não-é-necessário-para-github-release)
+      - [.Net Core 3.1](#net-core-31)
   - [**Como usar**](#como-usar)
       - [Github Release](#github-release)
-      - [Docker](#docker)
       - [.Net Core 3.1 (Debug/Release)](#net-core-31-debugrelease)
 
 ## **Pré-requisitos**
@@ -27,8 +26,8 @@ O projeto usa a [Ergast Api](http://ergast.com/mrd/) ([Postman documentation](ht
 #### Compartilhe seu calendário com seu e-mail da conta de serviço do Google
 > [Clique aqui](https://support.google.com/a/users/answer/37082?hl=en) para ler como compartilhar seu calendário do Google com seu e-mail da conta de serviço (client_email)
 
-#### .Net Core 3.1 ou Docker (Não é necessário para Github Release)
-> Para rodar esse app, você precisará ter [.Net Core 3.1](https://dotnet.microsoft.com/en-us/download/dotnet/3.1) ou [Docker](https://www.docker.com/get-started) instalado e configurado na sua máquina
+#### .Net Core 3.1
+> Para rodar esse app, você precisará ter [.Net Core 3.1](https://dotnet.microsoft.com/en-us/download/dotnet/3.1) instalado e configurado na sua máquina
 
 ## **Como usar**
 #### Github Release
@@ -38,57 +37,54 @@ O projeto usa a [Ergast Api](http://ergast.com/mrd/) ([Postman documentation](ht
 3. Você precisará **preencher as propriedades** do arquivo **appsettings.json** que estará na **pasta release**
     ```json
     "appSettings": {
-        "applicationName": "nome da aplicação (preenchimento automático)",
-        "ergastApi": {
-            "urlBase": "url da Api Ergast (preenchimento automático)"
+        "applicationName": "Nome da Aplicação (pré preenchida)",
+        "formulaOne": {
+            "urlBase": "F1 TV base Url (pré preenchida)",
+            "apiVersion": "F1 TV versão da Api (pré preenchida)",
+            "language": "F1 TV idioma da Api",
+            "yearsPageId": [
+                {
+                    "year": "Ano (pré preenchida)",
+                    "pageId": "ID da página de listar corridas referente ao ano (pré preenchida)"
+                }
+            ]
         },
         "google": {
             "calendar": {
-                "id": "Id do calendário do Google"
+                "id": "ID do calendário do Google"
             },
             "serviceAccount": {
-                "email": "client_email da conta de serviço do Google",
-                "privateKey": "private_key da conta de serviço do Google"
+                "email": "Valor do client_email no Google Service Account",
+                "privateKey": "Valor do private_key no Google Service Account"
             }
         }
     }
     ```
 4. Rodar o executável **(Script.FormulaOneCalendar.exe)**
 
-#### Docker
-1. Para usar com Docker, você precisará **preencher as variáveis de ambiente** no [Dockerfile](Dockerfile)
-    ```dockerfile
-    ENV ApplicationName "nome da aplicação (preenchimento automático)"
-    ENV ErgastApiUrl "url da Api Ergast (preenchimento automático)"
-    ENV GoogleCalendarId "Id do calendário do Google"
-    ENV ServiceAccountEmail "client_email da conta de serviço do Google"
-    ENV ServiceAccountPrivateKey "private_key da conta de serviço do Google"
-    ```
-2. Gerar (compilar) a imagem docker
-    ```powershell
-    docker build . -t imageName
-    ```
-3. Rodar a imagem docker
-    ```powershell
-    docker run imageName
-    ```
-> ℹ️ Mude o **imageName** para o nome que você quiser da sua imagem docker
-
 #### .Net Core 3.1 (Debug/Release)
 1. Para usar com .Net Core, você precisará **preencher as propriedades** do arquivo [appsettings](src/Script.FormulaOneCalendar/appsettings.json)    
     ```json
     "appSettings": {
-        "applicationName": "nome da aplicação (preenchimento automático)",
-        "ergastApi": {
-            "urlBase": "url da Api Ergast (preenchimento automático)"
+        "applicationName": "Nome da Aplicação (pré preenchida)",
+        "formulaOne": {
+            "urlBase": "F1 TV base Url (pré preenchida)",
+            "apiVersion": "F1 TV versão da Api (pré preenchida)",
+            "language": "F1 TV idioma da Api",
+            "yearsPageId": [
+                {
+                    "year": "Ano (pré preenchida)",
+                    "pageId": "ID da página de listar corridas referente ao ano (pré preenchida)"
+                }
+            ]
         },
         "google": {
             "calendar": {
-                "id": "Id do calendário do Google"
+                "id": "ID do calendário do Google"
             },
             "serviceAccount": {
-                "email": "client_email da conta de serviço do Google",
-                "privateKey": "private_key da conta de serviço do Google"
+                "email": "Valor do Google Service Account - client_email",
+                "privateKey": "Valor do Google Service Account - private_key"
             }
         }
     }
