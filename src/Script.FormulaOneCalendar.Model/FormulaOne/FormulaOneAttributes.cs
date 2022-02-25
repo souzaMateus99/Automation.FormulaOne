@@ -52,5 +52,8 @@ namespace Script.FormulaOneCalendar.Model.FormulaOne
 
         [JsonProperty("sessionEndDate")]
         public long SessionEndDate { get; set; }
+
+        [JsonProperty("Global_Meeting_Country_Name")]
+        public string Country { get; set; }
     }
 }

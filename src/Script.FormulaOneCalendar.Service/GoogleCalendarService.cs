@@ -15,19 +15,19 @@ namespace Script.FormulaOneCalendar.Service
     public class GoogleCalendarService : ICalendarService
     {
         private const string EVENT_DESCRIPTION_TEXT = "Event created by \"F1 - calendar\" automation";
-        
+
         private readonly EventsResource _eventService;
-        
+
         public GoogleCalendarService(CalendarService calendarService)
         {
             _eventService = calendarService.Events;
         }
 
-        public async Task<Event> CreateFormulaOneEventAsync(string calendarId, Race race)
+        public async Task<Event> CreateFormulaOneEventAsync(string calendarId, RaceDetail raceEvent)
         {
-            var googleEventResource = GetEvent(race);
-
+            var googleEventResource = GetEvent(raceEvent.Title, raceEvent.StartDate, raceEvent.EndDate);
             var request = _eventService.Insert(googleEventResource, calendarId);
+
             return await RequestGoogleAsync(request);
         }
 
@@ -46,7 +46,7 @@ namespace Script.FormulaOneCalendar.Service
                         totalRetryAttempt++;
                     }
                 })
-                .ExecuteAsync(async () => 
+                .ExecuteAsync(async () =>
                 {
                     var events = await RequestGoogleAsync(request);
                     request.PageToken = events.NextPageToken;
@@ -62,13 +62,12 @@ namespace Script.FormulaOneCalendar.Service
             return items;
         }
 
-        public async Task<Event> GetFormulaOneEventAsync(string calendarId, Race race)
+        public async Task<Event> GetFormulaOneEventAsync(string calendarId, RaceDetail raceEvent)
         {
             var races = await GetAllFormulaOneEventsAsync(calendarId);
 
-            return races.FirstOrDefault(r => r.Summary.Equals(race.RaceName)
-                                        /*&& r.Location.Equals(race.Circuit.Location.Country)
-                                        && r.Start.DateTime.Value.Date.Equals(race.Date.Date)*/);
+            return races.FirstOrDefault(r => r.Summary.Equals(raceEvent.Title)
+                                        && r.Start.DateTime.Value.Date.Equals(raceEvent.StartDate.Date));
         }
 
         public async Task RemoveFormulaOneEventAsync(string calendarId, string eventId)
@@ -78,30 +77,29 @@ namespace Script.FormulaOneCalendar.Service
             var text = await RequestGoogleAsync(request);
         }
 
-        public async Task UpdateFormulaOneEventAsync(string calendarId, string eventId, Race race)
+        public async Task UpdateFormulaOneEventAsync(string calendarId, string eventId, RaceDetail raceEvent)
         {
-            var googleEventResource = GetEvent(race);
-            
+            var googleEventResource = GetEvent(raceEvent.Title, raceEvent.StartDate, raceEvent.EndDate);
+
             var request = _eventService.Update(googleEventResource, calendarId, eventId);
 
             await RequestGoogleAsync(request);
         }
 
-        private Event GetEvent(Race race)
+        private Event GetEvent(string title, DateTime dateStart, DateTime dateFinish)
         {
             return new Event
             {
-                // Summary = race.RaceName,
-                // Description = EVENT_DESCRIPTION_TEXT,
-                // Location = race.Circuit.Location.Country,
-                // Start = new EventDateTime
-                // {
-                //     DateTime = new DateTime(race.Date.Year, race.Date.Month, race.Date.Day, race.Time.Hour, race.Time.Minute, race.Time.Second)
-                // },
-                // End = new EventDateTime
-                // {
-                //     DateTime = new DateTime(race.Date.Year, race.Date.Month, race.Date.Day, race.Time.Hour, race.Time.Minute, race.Time.Second).AddHours(2)
-                // }
+                Summary = title,
+                Description = EVENT_DESCRIPTION_TEXT,
+                Start = new EventDateTime
+                {
+                    DateTime = dateStart
+                },
+                End = new EventDateTime
+                {
+                    DateTime = dateFinish
+                }
             };
         }
 

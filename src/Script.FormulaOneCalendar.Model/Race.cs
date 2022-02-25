@@ -18,15 +18,9 @@ namespace Script.FormulaOneCalendar.Model
         public DateTime EndDate { get; set; }
         public long Season { get; set; }
         public int Round { get; set; }
+        public string Country { get; set; }
+        public string Location { get; set; }
         public string PageId { get; set; }
-        public IList<RaceDetail> RaceDetails { get; private set; }
-
-        public void AddRaceDetails(IEnumerable<RaceDetail> details)
-        {
-            foreach (var detail in details)
-            {
-                RaceDetails.Add(detail);
-            }
-        }
+        public IList<RaceDetail> RaceDetails { get; }
     }
 }
