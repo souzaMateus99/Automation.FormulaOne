@@ -70,19 +70,21 @@ namespace Script.FormulaOneCalendar
 
         private static int SetFlow()
         {
-            Console.WriteLine("Select an option");
-            Console.WriteLine("1- Add/Update F1 event to calendar");
-            Console.WriteLine("2- Remove F1 event to calendar");
-            Console.WriteLine("99- Both above options");
+            var userInput = string.Empty;
 
-            var userInput = Console.ReadLine();
-
-            if (int.TryParse(userInput, out var value))
+            do
             {
-                return value;
-            }
+                Console.WriteLine("Select an option");
+                Console.WriteLine("1- Add/Update F1 event to calendar");
+                Console.WriteLine("2- Remove F1 event to calendar");
+                Console.WriteLine("99- Both above options");
 
-            return default;
+                userInput = Console.ReadLine();
+            } while (userInput != ADD_UPDATE_CALENDAR_FLOW_OPTION.ToString()
+            && userInput != REMOVE_EVENT_CALENDAR_FLOW_OPTION.ToString()
+            && userInput != BOTH_FLOW_OPTION.ToString());
+
+            return int.Parse(userInput);
         }
 
         private static AppSettings GetAppSettings(IConfiguration configuration)
