@@ -34,7 +34,7 @@ The project uses the [Ergast Api](http://ergast.com/mrd/) ([Postman documentatio
 
 ## **How to Use**
 #### Github Release
-1. Access the **latest stable** [release version](https://github.com/souzaMateus99/Script.FormulaOneCalendar/releases)
+1. Access the **latest stable** [release version](https://github.com/souzaMateus99/Script.FormulaOneCalendar/releases/latest)
 2. Download the **release.zip** file
     ![release-zip.png](docs/release-zip.png)
 3. You will need to **fill the properties** in **appsettings.json** file that is in **release folder**.
